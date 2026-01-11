@@ -14,11 +14,14 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { SignUpSchema, SignUpType } from '@/lib/validation'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 export function SignupForm() {
   const {
@@ -33,9 +36,27 @@ export function SignupForm() {
     },
     resolver: standardSchemaResolver(SignUpSchema),
   })
+  const [transition, startTransition] = useTransition()
 
   async function handleFormSubmit(data: SignUpType) {
-    console.log(data)
+    const navigate = useNavigate()
+    startTransition(async () => {
+      await authClient.signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        fetchOptions: {
+          onError(context) {
+            toast.error(context.error.message)
+            console.log(context)
+          },
+          onSuccess() {
+            toast.success('Successfully Created User')
+            navigate({ to: '/' })
+          },
+        },
+      })
+    })
   }
 
   return (
@@ -54,6 +75,7 @@ export function SignupForm() {
               <Input
                 id="name"
                 type="text"
+                disabled={transition}
                 {...register('name')}
                 placeholder="John Doe"
                 className={cn(
@@ -75,6 +97,7 @@ export function SignupForm() {
                 type="email"
                 placeholder="username@gmail.com"
                 {...register('email')}
+                disabled={transition}
                 className={cn(
                   'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 ring-0',
                   errors.email &&
@@ -94,6 +117,7 @@ export function SignupForm() {
                 placeholder="Enter the password"
                 type="password"
                 {...register('password')}
+                disabled={transition}
                 className={cn(
                   'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 ring-0',
                   errors.password &&
@@ -111,10 +135,14 @@ export function SignupForm() {
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button disabled={transition} type="submit">
+                  Create Account
+                </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account?
-                  <Link to="/login">Login In</Link>
+                  <Link disabled={transition} to="/login">
+                    Login In
+                  </Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

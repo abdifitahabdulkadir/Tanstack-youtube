@@ -14,11 +14,14 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { LoginInSchema, LoginType } from '@/lib/validation'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 export function LoginForm() {
   const {
     register,
@@ -31,9 +34,26 @@ export function LoginForm() {
     },
     resolver: standardSchemaResolver(LoginInSchema),
   })
+  const navigate = useNavigate()
+  const [transition, startTransition] = useTransition()
 
-  async function handleFormSubmit(data: LoginType) {
-    console.log(data)
+  async function handleLoginForm(data: LoginType) {
+    startTransition(async () => {
+      await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        fetchOptions: {
+          onError(context) {
+            toast.error(context.error.message)
+            console.log(context)
+          },
+          onSuccess() {
+            toast.success('Successfully Created User')
+            navigate({ to: '/' })
+          },
+        },
+      })
+    })
   }
 
   return (
@@ -45,12 +65,13 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(handleLoginForm)}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
                 {...register('email')}
+                disabled={transition}
                 id="email"
                 type="email"
                 placeholder="username@gmail.com"
@@ -70,6 +91,7 @@ export function LoginForm() {
               <div className="flex items-center">
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Link
+                  disabled={transition}
                   to="/login"
                   className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                 >
@@ -78,6 +100,7 @@ export function LoginForm() {
               </div>
               <Input
                 {...register('password')}
+                disabled={transition}
                 id="password"
                 placeholder="Enter Your password"
                 type="password"
