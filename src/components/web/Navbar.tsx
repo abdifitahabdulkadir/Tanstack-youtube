@@ -1,4 +1,5 @@
-import { Button } from '../ui/button'
+import { Link } from '@tanstack/react-router'
+import { buttonVariants } from '../ui/button'
 import { ThemeToggle } from './ThemeToggle'
 
 export default function Navbar() {
@@ -15,7 +16,15 @@ export default function Navbar() {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Button className="">Login In</Button>
+          <Link
+            to="/login"
+            className={buttonVariants({ variant: 'secondary' })}
+          >
+            Login In
+          </Link>
+          <Link to="/signup" className={buttonVariants()}>
+            Get Started
+          </Link>
         </div>
       </div>
     </nav>

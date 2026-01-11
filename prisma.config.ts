@@ -1,12 +1,14 @@
-import { defineConfig, env } from 'prisma/config'
+import { config } from 'dotenv'
+import { resolve } from 'path'
+import { defineConfig } from 'prisma/config'
+
+// Load .env.local first, then fallback to .env
+config({ path: resolve(process.cwd(), '.env.local') })
+config({ path: resolve(process.cwd(), '.env') })
 
 export default defineConfig({
-  schema: './prisma/schema.prisma',
-  migrations: {
-    path: './prisma/migrations',
-    // seed: 'tsx prisma/seed.ts',
-  },
+  schema: 'prisma/schema.prisma',
   datasource: {
-    url: env('DATABASE_URL'),
+    url: process.env['DATABASE_URL']!,
   },
 })
