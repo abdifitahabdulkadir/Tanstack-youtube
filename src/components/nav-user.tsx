@@ -15,23 +15,19 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { authClient } from '@/lib/auth-client'
+import { NavUserPrope } from '@/lib/types'
 import { useNavigate } from '@tanstack/react-router'
 import { useTransition } from 'react'
 import toast from 'react-hot-toast'
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+const imageUrl =
+  'https://api.dicebear.com/9.x/glass/svg?seed=Valentina&flip=true'
+export function NavUser({ user }: NavUserPrope) {
   const { isMobile } = useSidebar()
-  const { data: sessionData } = authClient.useSession()
+
   const [transition, startTransition] = useTransition()
   const navigate = useNavigate()
+
   async function handleSignOut() {
     startTransition(async () => {
       await authClient.signOut({
@@ -47,6 +43,7 @@ export function NavUser({
       })
     })
   }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -57,22 +54,14 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={sessionData?.user.image ?? ''}
-                  alt={sessionData?.user.name}
-                />
+                <AvatarImage src={user.image ?? imageUrl} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {sessionData?.user.name.substring(0, 2)}
+                  {user.name.substring(0, 2)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {sessionData?.user.name}
-                </span>
-                <span className="truncate text-xs">
-                  {' '}
-                  {sessionData?.user.email}
-                </span>
+                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -86,25 +75,18 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={sessionData?.user.image ?? ''}
-                    alt={sessionData?.user.name}
-                  />
+                  <AvatarImage src={user.image ?? imageUrl} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    {sessionData?.user.name.substring(0, 2)}
+                    {user.name.substring(0, 2)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {sessionData?.user.name}
-                  </span>
-                  <span className="truncate text-xs">
-                    {sessionData?.user.email}
-                  </span>
+                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuItem onClick={handleSignOut}>
+            <DropdownMenuItem disabled={transition} onClick={handleSignOut}>
               <LogOut />
               Log out
             </DropdownMenuItem>

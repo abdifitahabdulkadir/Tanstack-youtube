@@ -7,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { PrimaryNavProps } from '@/lib/types'
 import { Link } from '@tanstack/react-router'
 
 export function NavPrimary({ items }: PrimaryNavProps) {
@@ -22,7 +23,7 @@ export function NavPrimary({ items }: PrimaryNavProps) {
                     activeProps={{
                       'data-active': true,
                     }}
-                    to={item.url}
+                    to={item.to}
                     activeOptions={item.activeOptions}
                   >
                     <item.icon />

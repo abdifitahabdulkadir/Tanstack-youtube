@@ -1,21 +1,5 @@
 'use client'
-import {
-  AudioWaveform,
-  Bookmark,
-  BookmarkIcon,
-  BookOpen,
-  Bot,
-  Command,
-  Compass,
-  Frame,
-  GalleryVerticalEnd,
-  Import,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-react'
-import * as React from 'react'
+import { Bookmark, BookmarkIcon, Compass, Import } from 'lucide-react'
 import { Activity } from 'react'
 
 import { NavUser } from '@/components/nav-user'
@@ -29,171 +13,35 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { NavUserPrope, PrimaryNavProps } from '@/lib/types'
 import { linkOptions } from '@tanstack/react-router'
 import { NavPrimary } from './nav-primary'
 
-// This is sample data.
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free',
-    },
-  ],
-  navMain: [
-    {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
-    },
-  ],
-}
-
 const navItems: PrimaryNavProps['items'] = linkOptions([
-  {
-    title: 'Items',
-    icon: BookmarkIcon,
-    url: '/dashboard/items',
-    activeOptions: {
-      exact: false,
-    },
-  },
   {
     title: 'Import',
     icon: Import,
-
-    url: '/dashboard/import',
-    activeOptions: {
-      exact: false,
-    },
+    to: '/dashboard/import',
+    activeOptions: { exact: false },
+  },
+  {
+    title: 'Items',
+    to: '/dashboard/items',
+    icon: BookmarkIcon,
+    activeOptions: { exact: false },
   },
   {
     title: 'Discover',
     icon: Compass,
-    url: '/dashboard/Discover',
-    activeOptions: {
-      exact: false,
-    },
+    to: '/dashboard/discover',
+    activeOptions: { exact: false },
   },
 ])
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user }: NavUserPrope) {
   const { state } = useSidebar()
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
@@ -213,7 +61,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavPrimary items={navItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
