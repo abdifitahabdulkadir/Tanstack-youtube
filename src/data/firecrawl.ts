@@ -12,8 +12,13 @@ export const scrapeSingleUrlFn = createServerFn({ method: 'POST' })
 
     const createdItem = await prisma.savedItem.create({
       data: {
-        url: url,
-        userId: user?.id!,
+        url,
+        tags: '',
+        user: {
+          connect: {
+            id: user.id!,
+          },
+        },
       },
     })
 

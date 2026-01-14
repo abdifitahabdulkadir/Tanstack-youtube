@@ -30,6 +30,7 @@ export type SavedItemMinAggregateOutputType = {
   title: string | null
   content: string | null
   summary: string | null
+  tags: string | null
   author: string | null
   publishedAt: Date | null
   ogImage: string | null
@@ -45,6 +46,7 @@ export type SavedItemMaxAggregateOutputType = {
   title: string | null
   content: string | null
   summary: string | null
+  tags: string | null
   author: string | null
   publishedAt: Date | null
   ogImage: string | null
@@ -78,6 +80,7 @@ export type SavedItemMinAggregateInputType = {
   title?: true
   content?: true
   summary?: true
+  tags?: true
   author?: true
   publishedAt?: true
   ogImage?: true
@@ -93,6 +96,7 @@ export type SavedItemMaxAggregateInputType = {
   title?: true
   content?: true
   summary?: true
+  tags?: true
   author?: true
   publishedAt?: true
   ogImage?: true
@@ -197,7 +201,7 @@ export type SavedItemGroupByOutputType = {
   title: string | null
   content: string | null
   summary: string | null
-  tags: string[]
+  tags: string
   author: string | null
   publishedAt: Date | null
   ogImage: string | null
@@ -234,7 +238,7 @@ export type SavedItemWhereInput = {
   title?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   content?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   summary?: Prisma.StringNullableFilter<"SavedItem"> | string | null
-  tags?: Prisma.StringNullableListFilter<"SavedItem">
+  tags?: Prisma.StringFilter<"SavedItem"> | string
   author?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"SavedItem"> | Date | string | null
   ogImage?: Prisma.StringNullableFilter<"SavedItem"> | string | null
@@ -271,7 +275,7 @@ export type SavedItemWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   content?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   summary?: Prisma.StringNullableFilter<"SavedItem"> | string | null
-  tags?: Prisma.StringNullableListFilter<"SavedItem">
+  tags?: Prisma.StringFilter<"SavedItem"> | string
   author?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"SavedItem"> | Date | string | null
   ogImage?: Prisma.StringNullableFilter<"SavedItem"> | string | null
@@ -310,7 +314,7 @@ export type SavedItemScalarWhereWithAggregatesInput = {
   title?: Prisma.StringNullableWithAggregatesFilter<"SavedItem"> | string | null
   content?: Prisma.StringNullableWithAggregatesFilter<"SavedItem"> | string | null
   summary?: Prisma.StringNullableWithAggregatesFilter<"SavedItem"> | string | null
-  tags?: Prisma.StringNullableListFilter<"SavedItem">
+  tags?: Prisma.StringWithAggregatesFilter<"SavedItem"> | string
   author?: Prisma.StringNullableWithAggregatesFilter<"SavedItem"> | string | null
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SavedItem"> | Date | string | null
   ogImage?: Prisma.StringNullableWithAggregatesFilter<"SavedItem"> | string | null
@@ -326,7 +330,7 @@ export type SavedItemCreateInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -342,7 +346,7 @@ export type SavedItemUncheckedCreateInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -358,7 +362,7 @@ export type SavedItemUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -374,7 +378,7 @@ export type SavedItemUncheckedUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -390,7 +394,7 @@ export type SavedItemCreateManyInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -406,7 +410,7 @@ export type SavedItemUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -421,7 +425,7 @@ export type SavedItemUncheckedUpdateManyInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -439,14 +443,6 @@ export type SavedItemListRelationFilter = {
 
 export type SavedItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
 }
 
 export type SavedItemCountOrderByAggregateInput = {
@@ -471,6 +467,7 @@ export type SavedItemMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   author?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   ogImage?: Prisma.SortOrder
@@ -486,6 +483,7 @@ export type SavedItemMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   author?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   ogImage?: Prisma.SortOrder
@@ -537,15 +535,6 @@ export type SavedItemUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SavedItemScalarWhereInput | Prisma.SavedItemScalarWhereInput[]
 }
 
-export type SavedItemCreatetagsInput = {
-  set: string[]
-}
-
-export type SavedItemUpdatetagsInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
 export type EnumItemStatesFieldUpdateOperationsInput = {
   set?: $Enums.ItemStates
 }
@@ -556,7 +545,7 @@ export type SavedItemCreateWithoutUserInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -571,7 +560,7 @@ export type SavedItemUncheckedCreateWithoutUserInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -587,7 +576,6 @@ export type SavedItemCreateOrConnectWithoutUserInput = {
 
 export type SavedItemCreateManyUserInputEnvelope = {
   data: Prisma.SavedItemCreateManyUserInput | Prisma.SavedItemCreateManyUserInput[]
-  skipDuplicates?: boolean
 }
 
 export type SavedItemUpsertWithWhereUniqueWithoutUserInput = {
@@ -615,7 +603,7 @@ export type SavedItemScalarWhereInput = {
   title?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   content?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   summary?: Prisma.StringNullableFilter<"SavedItem"> | string | null
-  tags?: Prisma.StringNullableListFilter<"SavedItem">
+  tags?: Prisma.StringFilter<"SavedItem"> | string
   author?: Prisma.StringNullableFilter<"SavedItem"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"SavedItem"> | Date | string | null
   ogImage?: Prisma.StringNullableFilter<"SavedItem"> | string | null
@@ -631,7 +619,7 @@ export type SavedItemCreateManyUserInput = {
   title?: string | null
   content?: string | null
   summary?: string | null
-  tags?: Prisma.SavedItemCreatetagsInput | string[]
+  tags: string
   author?: string | null
   publishedAt?: Date | string | null
   ogImage?: string | null
@@ -646,7 +634,7 @@ export type SavedItemUpdateWithoutUserInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -661,7 +649,7 @@ export type SavedItemUncheckedUpdateWithoutUserInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -676,7 +664,7 @@ export type SavedItemUncheckedUpdateManyWithoutUserInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tags?: Prisma.SavedItemUpdatetagsInput | string[]
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ogImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -776,7 +764,7 @@ export type $SavedItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     title: string | null
     content: string | null
     summary: string | null
-    tags: string[]
+    tags: string
     author: string | null
     publishedAt: Date | null
     ogImage: string | null
@@ -1213,7 +1201,7 @@ export interface SavedItemFieldRefs {
   readonly title: Prisma.FieldRef<"SavedItem", 'String'>
   readonly content: Prisma.FieldRef<"SavedItem", 'String'>
   readonly summary: Prisma.FieldRef<"SavedItem", 'String'>
-  readonly tags: Prisma.FieldRef<"SavedItem", 'String[]'>
+  readonly tags: Prisma.FieldRef<"SavedItem", 'String'>
   readonly author: Prisma.FieldRef<"SavedItem", 'String'>
   readonly publishedAt: Prisma.FieldRef<"SavedItem", 'DateTime'>
   readonly ogImage: Prisma.FieldRef<"SavedItem", 'String'>
@@ -1450,7 +1438,6 @@ export type SavedItemCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many SavedItems.
    */
   data: Prisma.SavedItemCreateManyInput | Prisma.SavedItemCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1469,7 +1456,6 @@ export type SavedItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many SavedItems.
    */
   data: Prisma.SavedItemCreateManyInput | Prisma.SavedItemCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

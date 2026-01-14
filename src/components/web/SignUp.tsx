@@ -37,10 +37,11 @@ export function SignupForm() {
     resolver: standardSchemaResolver(SignUpSchema),
   })
   const [transition, startTransition] = useTransition()
+  const navigate = useNavigate()
 
-  async function handleFormSubmit(data: SignUpType) {
-    const navigate = useNavigate()
+  function handleFormSubmit(data: SignUpType) {
     startTransition(async () => {
+      console.log(data)
       await authClient.signUp.email({
         name: data.name,
         email: data.email,
@@ -136,7 +137,7 @@ export function SignupForm() {
             <FieldGroup>
               <Field>
                 <Button disabled={transition} type="submit">
-                  Create Account
+                  {transition ? 'Creating....' : 'Create Account'}
                 </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account?
