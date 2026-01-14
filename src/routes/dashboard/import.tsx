@@ -66,7 +66,7 @@ function RouteComponent() {
     })
   }
 
-  async function handleBulkUrlForm(data: BulkUrlType) {}
+  async function handleBulkUrlForm() {}
 
   return (
     <div className="flex flex-1 items-center  justify-center  py-8">

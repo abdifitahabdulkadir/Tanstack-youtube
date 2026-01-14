@@ -1,15 +1,15 @@
 import { firecrawl } from '@/lib/firecrawl.init'
+import { authMiddleware } from '@/lib/middlewares'
 import { FirecrawlAuthorSchemaType, SingleUrlSchema } from '@/lib/validation'
 import { createServerFn } from '@tanstack/react-start'
 import prisma from 'prisma/prisma'
-import { getUserSessionFn } from './auth'
 
 export const scrapeSingleUrlFn = createServerFn({ method: 'POST' })
   .inputValidator(SingleUrlSchema)
-  .handler(async ({ data }) => {
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
     const { url } = data
-    const { user } = await getUserSessionFn()
-
+    const { user } = context.session
     const createdItem = await prisma.savedItem.create({
       data: {
         url,
