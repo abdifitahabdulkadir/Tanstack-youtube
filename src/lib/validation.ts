@@ -21,10 +21,13 @@ export const SingleUrlSchema = z.object({
   url: z.url(),
 })
 export const BulkUrlSchema = SingleUrlSchema.extend({
-  search: z
-    .string()
-    .min(1, 'Search is required')
-    .max(20, 'Search must be less than 20 characters'),
+  search: z.union([
+    z
+      .string()
+      .min(1, 'Search is required')
+      .max(20, 'Search must be less than 20 characters'),
+    z.undefined(),
+  ]),
 })
 
 export const FirecrawlAuthorSchema = z.object({

@@ -1,6 +1,10 @@
 import { firecrawl } from '@/lib/firecrawl.init'
 import { authMiddleware } from '@/lib/middlewares'
-import { FirecrawlAuthorSchemaType, SingleUrlSchema } from '@/lib/validation'
+import {
+  BulkUrlSchema,
+  FirecrawlAuthorSchemaType,
+  SingleUrlSchema,
+} from '@/lib/validation'
 import { createServerFn } from '@tanstack/react-start'
 import prisma from 'prisma/prisma'
 
@@ -68,5 +72,22 @@ export const scrapeSingleUrlFn = createServerFn({ method: 'POST' })
           status: 'FAILED',
         },
       })
+    }
+  })
+
+export const buildImportFn = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(BulkUrlSchema)
+  .handler(async ({ data }) => {
+    const { url, search } = data
+    try {
+      const result = await firecrawl.map(url, {
+        search: search,
+        limit: 20,
+      })
+      console.log(result)
+      return { success: true, data: result }
+    } catch (error) {
+      return { success: false }
     }
   })

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Field,
   FieldError,
@@ -13,8 +14,9 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { scrapeSingleUrlFn } from '@/data/firecrawl'
+import { buildImportFn, scrapeSingleUrlFn } from '@/data/firecrawl'
 import { cn } from '@/lib/utils'
 import {
   BulkUrlSchema,
@@ -23,10 +25,11 @@ import {
   SingleUrlType,
 } from '@/lib/validation'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { SearchResultWeb } from '@mendable/firecrawl-js'
 import { TabsContent } from '@radix-ui/react-tabs'
 import { createFileRoute } from '@tanstack/react-router'
 import { Globe, Link, Loader2 } from 'lucide-react'
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
@@ -45,11 +48,14 @@ function RouteComponent() {
   const bulkUrlForm = useForm<BulkUrlType>({
     defaultValues: {
       url: '',
-      search: '',
+      search: undefined,
     },
     resolver: standardSchemaResolver(BulkUrlSchema),
   })
   const [transition, startTransition] = useTransition()
+  const [discoveredUrls, setDiscoveredUrls] = useState<
+    SearchResultWeb[] | undefined
+  >()
 
   async function handleSingleUrlForm(data: SingleUrlType) {
     startTransition(async () => {
@@ -66,7 +72,22 @@ function RouteComponent() {
     })
   }
 
-  async function handleBulkUrlForm() {}
+  async function handleBulkUrlForm(data: BulkUrlType) {
+    startTransition(async () => {
+      const result = await buildImportFn({
+        data: {
+          url: data.url,
+          search: data.search,
+        },
+      })
+      if (result) {
+        toast.success('Successfully Mapped the url')
+        setDiscoveredUrls(result.data?.links)
+        return
+      }
+      toast.error('Failed to Map. please try again')
+    })
+  }
 
   return (
     <div className="flex flex-1 items-center  justify-center  py-8">
@@ -188,7 +209,7 @@ function RouteComponent() {
                       <Input
                         {...bulkUrlForm.register('search')}
                         disabled={transition}
-                        type="url"
+                        type="text"
                         placeholder="e.g docs, wesbite, blogs"
                         className={cn(
                           'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-[50px] ring-0',
@@ -224,6 +245,44 @@ function RouteComponent() {
                     </Button>
                   </FieldGroup>
                 </form>
+                {discoveredUrls && discoveredUrls.length > 0 && (
+                  <div className="space-y-4 mt-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">
+                        Found {discoveredUrls.length} URLs
+                      </p>
+                      <Button variant={'outline'} size={'sm'}>
+                        Select All
+                      </Button>
+                    </div>
+
+                    <div className="max-h-80 space-y-2 overflow-y-auto border rounded-md p-4">
+                      {discoveredUrls.map((each) => {
+                        return (
+                          <Label
+                            key={each.url}
+                            className="hover:bg-muted/50 rounded-md flex items-start p-2 gap-3 border text-white"
+                          >
+                            <Checkbox className="mt-0.5" />
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate font-medium text-sm">
+                                {each.title ?? 'Title has not been found'}
+                              </p>
+                              <p className="text-muted-foreground  truncate text-xs">
+                                {each.description ??
+                                  'Description has not been found'}
+                              </p>
+                              <p className="text-muted-foreground  truncate text-xs">
+                                {each.url}
+                              </p>
+                            </div>
+                          </Label>
+                        )
+                      })}
+                    </div>
+                    <Button className="w-full">Import</Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
