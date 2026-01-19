@@ -23,6 +23,6 @@ export const globalAuthMiddleware = createMiddleware().server(
     if (!session) {
       throw redirect({ to: '/login' })
     }
-    return next({ context: { session: session.session, user: session.user } })
+    return next( )
   },
 )

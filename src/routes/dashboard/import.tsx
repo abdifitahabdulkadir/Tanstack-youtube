@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { buildImportFn, scrapeSingleUrlFn } from '@/data/firecrawl'
+import { buildImportFn, scrapeBulkImports, scrapeSingleUrlFn } from '@/data/firecrawl'
 import { cn } from '@/lib/utils'
 import {
   BulkUrlSchema,
@@ -56,6 +56,29 @@ function RouteComponent() {
   const [discoveredUrls, setDiscoveredUrls] = useState<
     SearchResultWeb[] | undefined
   >()
+  const [selectedUrls, setSelectedUrls] = useState<
+  Set<string>
+  >(new Set())
+
+  function handleSelectAll(){
+    if(selectedUrls.size===discoveredUrls?.length){
+      setSelectedUrls(new Set())
+    }
+    else {
+      setSelectedUrls(new Set(discoveredUrls?.map((each)=>each.url)))
+    }
+  }
+
+  function handleToggleUrl(url:string){
+    const newSelectedUrls=new Set(selectedUrls);
+    if(selectedUrls.has(url)) {
+      newSelectedUrls.delete(url)
+    }
+    else {
+      newSelectedUrls.add(url)
+    }
+    setSelectedUrls(newSelectedUrls)
+  }
 
   async function handleSingleUrlForm(data: SingleUrlType) {
     startTransition(async () => {
@@ -72,6 +95,9 @@ function RouteComponent() {
     })
   }
 
+  
+
+
   async function handleBulkUrlForm(data: BulkUrlType) {
     startTransition(async () => {
       const result = await buildImportFn({
@@ -86,6 +112,21 @@ function RouteComponent() {
         return
       }
       toast.error('Failed to Map. please try again')
+    })
+  }
+
+   function handleScrapeBulkImport(){
+    if(selectedUrls.size===0) {
+      toast.error("Please select atleast one URL.")
+      return ;
+    }
+    startTransition(async()=>{
+      await scrapeBulkImports({
+         data:{
+           urls:Array.from(selectedUrls)
+         }
+       })
+       toast.success(`Successfully Scarapped ${selectedUrls.size} URls ` )
     })
   }
 
@@ -251,8 +292,9 @@ function RouteComponent() {
                       <p className="text-sm font-medium">
                         Found {discoveredUrls.length} URLs
                       </p>
-                      <Button variant={'outline'} size={'sm'}>
-                        Select All
+                      <Button onClick={handleSelectAll} variant={'outline'} size={'sm'}>
+                        {selectedUrls.size===discoveredUrls.length?"DisSelect All":"Select All"}
+                      
                       </Button>
                     </div>
 
@@ -263,7 +305,7 @@ function RouteComponent() {
                             key={each.url}
                             className="hover:bg-muted/50 rounded-md flex items-start p-2 gap-3 border text-white"
                           >
-                            <Checkbox className="mt-0.5" />
+                            <Checkbox onCheckedChange={()=>handleToggleUrl(each.url)} checked={selectedUrls.has(each.url)} className="mt-0.5" />
                             <div className="min-w-0 flex-1">
                               <p className="truncate font-medium text-sm">
                                 {each.title ?? 'Title has not been found'}
@@ -280,7 +322,13 @@ function RouteComponent() {
                         )
                       })}
                     </div>
-                    <Button className="w-full">Import</Button>
+                    <Button disabled={transition}
+                     onClick={handleScrapeBulkImport} className="w-full">
+                      {
+                      transition?"Importing..."  :selectedUrls.size>1?"Import":"Import URLs"
+                      }
+                      Import
+                     </Button>
                   </div>
                 )}
               </CardContent>
