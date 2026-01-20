@@ -1,17 +1,29 @@
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
+import { TabsContent } from '@radix-ui/react-tabs'
+import { createFileRoute } from '@tanstack/react-router'
+import { Globe, Link, Loader2 } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import type {
+    BulkUrlType,
+    SingleUrlType
+} from '@/lib/validation'
+import type { SearchResultWeb } from '@mendable/firecrawl-js'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
+    Field,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,19 +31,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { buildImportFn, scrapeBulkImports, scrapeSingleUrlFn } from '@/data/firecrawl'
 import { cn } from '@/lib/utils'
 import {
-  BulkUrlSchema,
-  BulkUrlType,
-  SingleUrlSchema,
-  SingleUrlType,
+    BulkUrlSchema,
+    SingleUrlSchema
 } from '@/lib/validation'
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { SearchResultWeb } from '@mendable/firecrawl-js'
-import { TabsContent } from '@radix-ui/react-tabs'
-import { createFileRoute } from '@tanstack/react-router'
-import { Globe, Link, Loader2 } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/dashboard/import')({
   component: RouteComponent,
@@ -54,7 +56,7 @@ function RouteComponent() {
   })
   const [transition, startTransition] = useTransition()
   const [discoveredUrls, setDiscoveredUrls] = useState<
-    SearchResultWeb[] | undefined
+    Array<SearchResultWeb> | undefined
   >()
   const [selectedUrls, setSelectedUrls] = useState<
   Set<string>
@@ -80,7 +82,7 @@ function RouteComponent() {
     setSelectedUrls(newSelectedUrls)
   }
 
-  async function handleSingleUrlForm(data: SingleUrlType) {
+   function handleSingleUrlForm(data: SingleUrlType) {
     startTransition(async () => {
       const result = await scrapeSingleUrlFn({
         data: {
@@ -95,10 +97,10 @@ function RouteComponent() {
     })
   }
 
-  
 
 
-  async function handleBulkUrlForm(data: BulkUrlType) {
+
+   function handleBulkUrlForm(data: BulkUrlType) {
     startTransition(async () => {
       const result = await buildImportFn({
         data: {
@@ -294,7 +296,7 @@ function RouteComponent() {
                       </p>
                       <Button onClick={handleSelectAll} variant={'outline'} size={'sm'}>
                         {selectedUrls.size===discoveredUrls.length?"DisSelect All":"Select All"}
-                      
+
                       </Button>
                     </div>
 
