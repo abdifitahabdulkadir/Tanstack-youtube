@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ItemStates } from '@/generated/prisma/enums'
 
 export const LoginInSchema = z.object({
   email: z.email('Email is required'),
@@ -35,7 +36,13 @@ export const FirecrawlAuthorSchema = z.object({
   publishedAt: z.string().nullable(),
 })
 
-// expor tall types
+export const SavedItemsSearchSchema = z.object({
+  q: z.string().default(""),
+  status:z.union([z.literal("all"), z.enum(ItemStates)]).default("all")
+})
+
+
+// export tall types
 export type LoginType = z.infer<typeof LoginInSchema>
 export type SignUpType = z.infer<typeof SignUpSchema>
 export type SingleUrlType = z.infer<typeof SingleUrlSchema>

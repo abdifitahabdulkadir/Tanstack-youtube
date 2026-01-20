@@ -1,39 +1,22 @@
+
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { TabsContent } from '@radix-ui/react-tabs'
 import { createFileRoute } from '@tanstack/react-router'
 import { Globe, Link, Loader2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import type {
-    BulkUrlType,
-    SingleUrlType
-} from '@/lib/validation'
+import type { BulkUrlType, SingleUrlType } from '@/lib/validation'
 import type { SearchResultWeb } from '@mendable/firecrawl-js'
 import { Button } from '@/components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { buildImportFn, scrapeBulkImports, scrapeSingleUrlFn } from '@/data/firecrawl'
 import { cn } from '@/lib/utils'
-import {
-    BulkUrlSchema,
-    SingleUrlSchema
-} from '@/lib/validation'
+import { BulkUrlSchema, SingleUrlSchema } from '@/lib/validation'
 
 export const Route = createFileRoute('/dashboard/import')({
   component: RouteComponent,
@@ -108,9 +91,9 @@ function RouteComponent() {
           search: data.search,
         },
       })
-      if (result) {
+      if (result.success) {
         toast.success('Successfully Mapped the url')
-        setDiscoveredUrls(result.data?.links)
+        setDiscoveredUrls(result.data.links)
         return
       }
       toast.error('Failed to Map. please try again')
@@ -174,7 +157,7 @@ function RouteComponent() {
                         type="url"
                         placeholder="Paste your single url"
                         className={cn(
-                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-[100px] ring-0',
+                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-25 ring-0',
                           singleUrlForm.formState.errors.url &&
                             'focus-visible:border-red-600 focus-visible:border-2',
                         )}
@@ -229,7 +212,7 @@ function RouteComponent() {
                         type="url"
                         placeholder="Paste your single url"
                         className={cn(
-                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-[100px] ring-0',
+                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-25 ring-0',
                           bulkUrlForm.formState.errors.url &&
                             'focus-visible:border-red-600 focus-visible:border-2',
                         )}
@@ -255,7 +238,7 @@ function RouteComponent() {
                         type="text"
                         placeholder="e.g docs, wesbite, blogs"
                         className={cn(
-                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-[50px] ring-0',
+                          'border border-black/10 outline-0 focus-visible:ring-0 focus-visible:outline-0 h-12.5 ring-0',
                           bulkUrlForm.formState.errors.search &&
                             'focus-visible:border-red-600 focus-visible:border-2',
                         )}
