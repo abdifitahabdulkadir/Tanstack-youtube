@@ -48,3 +48,4 @@ export type SignUpType = z.infer<typeof SignUpSchema>
 export type SingleUrlType = z.infer<typeof SingleUrlSchema>
 export type BulkUrlType = z.infer<typeof BulkUrlSchema>
 export type FirecrawlAuthorSchemaType = z.infer<typeof FirecrawlAuthorSchema>
+export type SavedItemsSearchType = z.infer<typeof SavedItemsSearchSchema>
